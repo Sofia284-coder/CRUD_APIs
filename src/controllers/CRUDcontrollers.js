@@ -41,3 +41,21 @@ export function getByID(req, res) {
     return res.json(task);
  
 }
+
+export function createTask(req, res) {
+
+    const newID = tasks.at(-1).id + 1;
+    const {title} = req.body;
+    console.log(title)
+
+    if (!title){
+        return res.status(400).json("The title is empty or missing");
+    }
+
+    const createdTask = { id: newID, title: title , done: false}
+    
+    tasks.push(createdTask);
+
+    return res.status(201).json(createdTask);
+
+}
