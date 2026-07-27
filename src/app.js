@@ -4,7 +4,6 @@ const port = 3000;
 
 import CRUDRoutes from "./routes/CRUDRoutes.js"
 
-
 app.use('/', CRUDRoutes)
 
 
