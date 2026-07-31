@@ -23,7 +23,9 @@ export function getHealth(req, res) {
 export function getAll(req, res) {
 
     const tasks = db.prepare("SELECT * FROM tasks").all();
-    
+
+    tasks.forEach(task => {task.done = Boolean(task.done);});
+
     res.json(tasks);
        
 }
@@ -38,6 +40,8 @@ export function getByID(req, res) {
     if (!task){
         return res.status(404).json({ error: `Task ${reqID} not found` });
     }
+
+    task.done = Boolean(task.done)
 
     return res.json(task);
  
@@ -78,13 +82,15 @@ export function createTask(req, res) {
 export function updateTask(req,res) {
 
     const ID = req.params.id;
-    const task = tasks.find(t => t.id === Number(ID));
+    
+    const task = db.prepare("SELECT * FROM tasks WHERE id = ?").get(ID);
 
     if (!task) {
         return res.status(404).json({ error: `Task ${ID} not found` });
     }
 
     const {title, done} = req.body;
+
 
     if (title === undefined && done === undefined) {
         return res.status(400).json({error: "One of title or done must be provided"});
@@ -102,9 +108,16 @@ export function updateTask(req,res) {
         if (typeof done !== "boolean") {
             return res.status(400).json({error: "done must be a boolean"});
         }
-        task.done = done;
+        task.done = done ? 1 : 0
     }
-    return res.json(task);
+
+    const update = db.prepare(
+        "UPDATE tasks SET title = ?, done = ? WHERE id = ?"
+    );
+
+    update.run(task.title, task.done, ID);
+
+    return res.json({"id":Number(ID), "title":task.title, "done": Boolean(task.done) });
 }
 
 //curl -X DELETE http://localhost:3000/tasks/5
