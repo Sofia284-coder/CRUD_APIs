@@ -125,13 +125,13 @@ export function deleteTask(req, res) {
 
     const idToRemove = req.params.id;
 
-    const task = tasks.find(t => t.id === Number(idToRemove));
+    const task = db.prepare("SELECT * FROM tasks WHERE id = ?").get(idToRemove);
 
     if (!task) {
         return res.status(404).json({error: `Task ${idToRemove} not found`});
     }
 
-    tasks = tasks.filter(t => t.id !== Number(idToRemove));
+    db.prepare("DELETE FROM tasks WHERE id = ?").run(idToRemove);
 
     return res.sendStatus(204);
 }
