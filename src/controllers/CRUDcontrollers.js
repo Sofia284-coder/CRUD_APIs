@@ -33,7 +33,7 @@ export function getByID(req, res) {
     const reqID = req.params.id; 
 
     
-    const task = db.prepare("SELECT * FROM tasks WHERE id = ?").get(id);
+    const task = db.prepare("SELECT * FROM tasks WHERE id = ?").get(reqID);
 
     if (!task){
         return res.status(404).json({ error: `Task ${reqID} not found` });
