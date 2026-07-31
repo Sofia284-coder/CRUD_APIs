@@ -1,6 +1,6 @@
 # Task API
 
-A simple RESTful Task API built with **Node.js** and **Express.js**. The API supports creating, retrieving, updating, and deleting tasks (CRUD operations). It also includes interactive API documentation using **Swagger UI** following the **OpenAPI 3.0** specification.
+A simple RESTful Task API built with Node.js, Express.js, and SQLite. The API supports creating, retrieving, updating, and deleting tasks (CRUD operations) with persistent data storage using the better-sqlite3 library. It also includes interactive API documentation using Swagger UI following the OpenAPI 3.0 specification.
 
 ---
 
@@ -9,6 +9,8 @@ A simple RESTful Task API built with **Node.js** and **Express.js**. The API sup
 - Node.js
 - Express.js
 - Express Router
+- SQLite
+- better-sqlite3
 - Swagger UI Express
 - OpenAPI 3.0
 - Git & GitHub
@@ -18,17 +20,19 @@ A simple RESTful Task API built with **Node.js** and **Express.js**. The API sup
 ## Project Structure
 
 ```text
-ASS1/
+CRUD_APIs/
 │
 ├── images/
 │   ├── curl_output.png
-│   └── swagger.png
-│
-├── node_modules/
+│   ├── swagger.png
+│   └── sqlite_viewer.png
 │
 ├── src/
 │   ├── controllers/
 │   │   └── CRUDcontrollers.js
+│   │
+│   ├── database/
+│   │   └── database.js
 │   │
 │   ├── routes/
 │   │   └── CRUDRoutes.js
@@ -36,9 +40,26 @@ ASS1/
 │   ├── app.js
 │   └── swagger.json
 │
+├── tasks.db
 ├── package.json
 ├── package-lock.json
 └── README.md
+```
+
+---
+
+## Why SQLite?
+
+SQLite was chosen because it is a lightweight, serverless relational database.
+It stores all data in a single file (`tasks.db`), making it simple to use for
+small applications and coursework without requiring a separate database server.
+
+## Database File
+
+The application's database is stored in:
+
+```text
+tasks.db
 ```
 
 ---
@@ -85,6 +106,7 @@ This command automatically installs all required packages defined in `package.js
 
 - Express
 - Swagger UI Express
+- better-sqlite3
 
 No additional installations are required.
 
@@ -99,6 +121,9 @@ If the server starts successfully, you should see:
 ```text
 Example app listening on port 3000
 ```
+
+When the application starts for the first time, it automatically creates
+`tasks.db` and initializes the database with three sample tasks.
 
 ---
 
@@ -165,9 +190,25 @@ Keep-Alive: timeout=5
 
 ---
 
+## SQLite Database
+
+![SQLite Database](images/sqlite_viewer.png)
+
+## Example SQL Query
+
+The following SQL query was executed in DB Browser for SQLite to retrieve all completed tasks:
+
+```sql
+SELECT * FROM tasks WHERE done = 1;
+```
+
+---
+
 ## curl Output
 
 ![curl Output](images/curl_output.png)
+
+
 
 ---
 
@@ -183,13 +224,11 @@ Keep-Alive: timeout=5
 
 ---
 
-# Features
+## Features
 
-- Create tasks
-- Retrieve all tasks
-- Retrieve a task by ID
-- Update task title and completion status
-- Delete tasks
-- Proper HTTP status codes
+- Full CRUD REST API
+- Persistent task storage using SQLite
+- Automatic database creation
+- Automatic sample data seeding
 - Input validation
-- Interactive API documentation using Swagger UI
+- Interactive Swagger documentation
