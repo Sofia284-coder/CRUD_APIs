@@ -47,17 +47,21 @@ export function getByID(req, res) {
 
 export function createTask(req, res) {
 
-    const newID = tasks.at(-1).id + 1;
     const {title} = req.body;
-    console.log(title)
 
     if (!title){
         return res.status(400).json("The title is empty or missing");
     }
 
-    const createdTask = { id: newID, title: title , done: false}
-    
-    tasks.push(createdTask);
+    const insert = db.prepare("INSERT INTO tasks (title, done) VALUES (?, 0)");
+
+    const result = insert.run(title);
+
+    const createdTask = {
+        id: result.lastInsertRowid,
+        title,
+        done: false
+    };
 
     return res.status(201).json(createdTask);
 
