@@ -2,6 +2,9 @@ import express from "express";
 const app = express();
 const port = 3000;
 
+//importing database
+import db from "./database/database.js";
+
 import CRUDRoutes from "./routes/CRUDRoutes.js"
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from './swagger.json' with { type: "json" };
