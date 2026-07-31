@@ -1,10 +1,8 @@
 import { json } from "express";
 
-let tasks = [
-  { id: 1, title: "wake up", done: true },
-  { id: 2, title: "brush teeth", done: false },
-  { id: 3, title: "have existential crises", done: true }
-];
+
+//importing database
+import db from "../database/database.js";
 
 export function getDescription(req, res) {
     
@@ -23,7 +21,8 @@ export function getHealth(req, res) {
 //curl http://localhost:3000/tasks
 
 export function getAll(req, res) {
-    
+
+    const tasks = db.prepare("SELECT * FROM tasks").all();
     
     res.json(tasks);
        
@@ -34,7 +33,7 @@ export function getByID(req, res) {
     const reqID = req.params.id; 
 
     
-    const task = tasks.find(t => t.id === Number(reqID));
+    const task = db.prepare("SELECT * FROM tasks WHERE id = ?").get(id);
 
     if (!task){
         return res.status(404).json({ error: `Task ${reqID} not found` });
